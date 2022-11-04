@@ -97,7 +97,7 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	sendUrl = fmt.Sprintf("https://oapi.dingtalk.com/robot/send?access_token=%s", accessToken)
-	messageUrl = fmt.Sprintf("%s/dashboard?id=%s", sonarUrl, projectKey)
+	messageUrl = fmt.Sprintf("http://10.11.59.141:9000/dashboard?id=%s", projectKey)
 
 	textList := []string{
 		fmt.Sprintf("![head](%s)", picUrl),
