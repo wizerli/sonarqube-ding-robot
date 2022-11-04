@@ -1,3 +1,3 @@
-module github.com/akkuman/sonarqube-ding-robot
+module github.com/wizerli/sonarqube-ding-robot
 
 go 1.16
