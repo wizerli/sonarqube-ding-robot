@@ -114,7 +114,7 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 
 	textList := []string{
 		fmt.Sprintf("![head](%s)", picUrl),
-		fmt.Sprintf("本次扫描仓库分支: %s", projectName),
+		fmt.Sprintf("本次扫描仓库: %s", projectName),
 		fmt.Sprintf("## 代码总体扫描结果"),
 		fmt.Sprintf("BUG数: %s 个", totalBugs),
 		fmt.Sprintf("漏洞数: %s 个", vulnerabilities),
@@ -136,11 +136,11 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 			BtnOrientation: "0",
 			Btns: []DingActionCardBtn{
 				{
-					Title:     fmt.Sprintf("点击查看分析结果(需要提前浏览器登陆过sonarqube)"),
+					Title:     fmt.Sprintf("点击查看分析结果WEB(需要浏览器登陆过sonarqube)"),
 					ActionURL: buildDingLink(messageUrl, false),
 				},
 				{
-					Title:     fmt.Sprintf("点击下载分析报告PDF约2MB(需要提前浏览器登陆过sonarqube)"),
+					Title:     fmt.Sprintf("点击下载分析报告PDF(需要浏览器登陆过sonarqube)"),
 					ActionURL: buildDingLink(pdfUrl, false),
 				},
 			},
