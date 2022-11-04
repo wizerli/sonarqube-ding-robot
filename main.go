@@ -121,11 +121,11 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Sprintf("异味数: %s 个", codeSmells),
 		fmt.Sprintf("测试覆盖率: %s%%", coverage),
 		fmt.Sprintf("代码重复率: %s%%", duplicatedLinesDensity),
-		fmt.Sprintf("阻断blocker数: %s%%", blocker_violations),
-		fmt.Sprintf("严重critical数: %s%%", critical_violations),
-		fmt.Sprintf("主要major数: %s%%", major_violations),
-		fmt.Sprintf("次要minor数: %s%%", minor_violations),
-		fmt.Sprintf("提示info数: %s%%", info_violations),
+		fmt.Sprintf("阻断blocker数: %s 个", blocker_violations),
+		fmt.Sprintf("严重critical数: %s 个", critical_violations),
+		fmt.Sprintf("主要major数: %s 个", major_violations),
+		fmt.Sprintf("次要minor数: %s 个", minor_violations),
+		fmt.Sprintf("提示info数: %s 个", info_violations),
 	}
 
 	dingMsg := DingMsg{
