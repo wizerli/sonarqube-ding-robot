@@ -63,10 +63,11 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 	// 项目key
 	projectKey := sonarQubeCallBackData.Project.Key
 	// sonar prop
-	var totalBugs, vulnerabilities, codeSmells, coverage, duplicatedLinesDensity, alertStatus string
+	var totalBugs, vulnerabilities, codeSmells, coverage, duplicatedLinesDensity, alertStatus, blocker_violations, critical_violations, major_violations, minor_violations, info_violations string
 	// dingtalk prop
 	var sendUrl, picUrl, messageUrl, pdfUrl string
-
+	
+	
 	// get sonar info
 	measuresData, err := getMeasures(sonarUrl, projectKey)
 	if err != nil {
