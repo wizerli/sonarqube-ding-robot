@@ -15,9 +15,10 @@ var addr = flag.String("addr", "0.0.0.0:9001", "输入监听地址")
 var token = flag.String("token", "", "输入sonarqube token")
 var httpClient = &http.Client{}
 
+// 新增serverity相关metrics
 func getMeasures(sonarUrl, projectKey interface{}) (MeasuresData, error) {
 	var measuresData MeasuresData
-	url := fmt.Sprintf("%s/api/measures/search?projectKeys=%s&metricKeys=alert_status,bugs,reliability_rating,vulnerabilities,security_rating,code_smells,sqale_rating,duplicated_lines_density,coverage,ncloc,ncloc_language_distribution", sonarUrl, projectKey)
+	url := fmt.Sprintf("%s/api/measures/search?projectKeys=%s&metricKeys=alert_status,bugs,reliability_rating,vulnerabilities,security_rating,code_smells,sqale_rating,duplicated_lines_density,coverage,ncloc,ncloc_language_distribution,critical_violations,blocker_violations,major_violations,minor_violations,info_violations", sonarUrl, projectKey)
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		return measuresData, err
@@ -64,7 +65,7 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 	// sonar prop
 	var totalBugs, vulnerabilities, codeSmells, coverage, duplicatedLinesDensity, alertStatus string
 	// dingtalk prop
-	var sendUrl, picUrl, messageUrl string
+	var sendUrl, picUrl, messageUrl, pdfUrl string
 
 	// get sonar info
 	measuresData, err := getMeasures(sonarUrl, projectKey)
@@ -86,6 +87,16 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 			coverage = measure.Value
 		case "duplicated_lines_density":
 			duplicatedLinesDensity = measure.Value
+		case "critical_violations":
+			critical_violations = measure.Value
+		case "blocker_violations":
+			blocker_violations = measure.Value
+		case "major_violations":
+			major_violations = measure.Value
+		case "minor_violations":
+			minor_violations = measure.Value
+		case "info_violations":
+			info_violations = measure.Value
 		case "alert_status":
 			alertStatus = measure.Value
 			switch alertStatus {
@@ -98,6 +109,7 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 	}
 	sendUrl = fmt.Sprintf("https://oapi.dingtalk.com/robot/send?access_token=%s", accessToken)
 	messageUrl = fmt.Sprintf("http://10.11.59.141:9000/dashboard?id=%s", projectKey)
+	pdfUrl = fmt.Sprintf("http://10.11.59.141:9000/api/pdfreport/get?componentKey=%s", projectKey)
 
 	textList := []string{
 		fmt.Sprintf("![head](%s)", picUrl),
@@ -108,6 +120,11 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 		fmt.Sprintf("异味数: %s 个", codeSmells),
 		fmt.Sprintf("测试覆盖率: %s%%", coverage),
 		fmt.Sprintf("代码重复率: %s%%", duplicatedLinesDensity),
+		fmt.Sprintf("阻断blocker数: %s%%", blocker_violations),
+		fmt.Sprintf("严重critical数: %s%%", critical_violations),
+		fmt.Sprintf("主要major数: %s%%", major_violations),
+		fmt.Sprintf("次要minor数: %s%%", minor_violations),
+		fmt.Sprintf("提示info数: %s%%", info_violations),
 	}
 
 	dingMsg := DingMsg{
@@ -118,8 +135,12 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 			BtnOrientation: "0",
 			Btns: []DingActionCardBtn{
 				{
-					Title:     fmt.Sprintf("点击查看分析结果"),
+					Title:     fmt.Sprintf("点击查看分析结果(需要提前浏览器登陆过sonarqube)"),
 					ActionURL: buildDingLink(messageUrl, false),
+				},
+				{
+					Title:     fmt.Sprintf("点击下载分析报告PDF约2MB(需要提前浏览器登陆过sonarqube)"),
+					ActionURL: buildDingLink(pdfUrl, false),
 				},
 			},
 		},
