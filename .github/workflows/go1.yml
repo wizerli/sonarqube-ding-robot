@@ -22,7 +22,7 @@ jobs:
         go-version: 1.18
 
     - name: Build
-      run: go build -v github.com/wizerli/sonarqube-ding-robot
+      run: cd /home/wizerli/sonarqube-ding-robot ; go build -v github.com/wizerli/sonarqube-ding-robot
 
     - name: Test
-      run: go test -v github.com/wizerli/sonarqube-ding-robot
+      run: cd /home/wizerli/sonarqube-ding-robot ; go test -v github.com/wizerli/sonarqube-ding-robot
