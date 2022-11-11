@@ -13,7 +13,6 @@ import (
 
 var addr = flag.String("addr", "0.0.0.0:9001", "enter listening address")
 var token = flag.String("token", "", "enter sonarqube token")
-var sonarhost = flag.String("sonarhost", "", "enter sonarqube host, like 127.0.0.1:9000")
 var httpClient = &http.Client{}
 
 // 新增serverity相关metrics
@@ -110,8 +109,8 @@ func dingTalkHandler(w http.ResponseWriter, r *http.Request) {
 		}
 	}
 	sendUrl = fmt.Sprintf("https://oapi.dingtalk.com/robot/send?access_token=%s", accessToken)
-	messageUrl = fmt.Sprintf("http://%s/dashboard?id=%s", sonarhost, projectKey)
-	pdfUrl = fmt.Sprintf("http://%s/api/pdfreport/get?componentKey=%s", sonarhost, projectKey)
+	messageUrl = fmt.Sprintf("%s/dashboard?id=%s", sonarUrl, projectKey)
+	pdfUrl = fmt.Sprintf("%s/api/pdfreport/get?componentKey=%s", sonarUrl, projectKey)
 
 	textList := []string{
 		fmt.Sprintf("![head](%s)", picUrl),
